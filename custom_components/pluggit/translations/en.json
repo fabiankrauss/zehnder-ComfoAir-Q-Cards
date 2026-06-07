@@ -68,7 +68,8 @@
         "description": "Configure advanced behavior and display options.",
         "data": {
           "disable_temperature_unknown": "Disable setting temperature sensors to unknown in bypass/summer modes",
-          "disable_notifications": "Disable notifications"
+          "disable_notifications": "Disable notifications",
+          "enable_time_synchronization": "Enable time synchronization"
         }
       }
     },
@@ -552,7 +553,7 @@
       "message": "Notifications can be disabled in the integration options."
     },
     "filter_remain_notification": {
-      "message": "The filter has reached the end of it's lifetime. Please replace the filter."
+      "message": "The filter has reached the end of its lifetime. Please replace the filter."
     },
     "invalid_adaptive_state": {
       "message": "Invalid adaptive state: {state}. Available states: {available_states}"

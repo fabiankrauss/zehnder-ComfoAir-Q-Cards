@@ -31,11 +31,14 @@ MODBUS_REGISTER_BYPASS_MIN_TEMP = 444
 MODBUS_REGISTER_BYPASS_MAX_TEMP_SUMMER = 764
 MODBUS_REGISTER_BYPASS_MIN_TEMP_SUMMER = 766
 MODBUS_REGISTER_CURRENT_MODE = 472
+MODBUS_REGISTER_DATETIME = 108
+MODBUS_REGISTER_DATETIME_SET = 110
 MODBUS_REGISTER_EXHAUST_TEMP = 138
 MODBUS_REGISTER_EXTRACT_TEMP = 136
 MODBUS_REGISTER_FAN_LEVEL = 324
 MODBUS_REGISTER_FAN1_SPEED = 100
 MODBUS_REGISTER_FAN2_SPEED = 102
+MODBUS_REGISTER_FILTER_DIRTINESS = 612
 MODBUS_REGISTER_FILTER_LIFETIME = 556
 MODBUS_REGISTER_FILTER_REMAIN = 554
 MODBUS_REGISTER_FILTER_RESET = 558
@@ -52,6 +55,7 @@ MODBUS_REGISTER_NIGHT_MODE_START_MINUTE = 334
 MODBUS_REGISTER_OUTDOOR_TEMP = 132
 MODBUS_REGISTER_ROOM_TEMP = 140
 MODBUS_REGISTER_SERIAL_NUMBER = 4
+MODBUS_REGISTER_SERVOFLOW_ENABLED = 448
 MODBUS_REGISTER_SUPPLY_TEMP = 134
 MODBUS_REGISTER_SYSTEM_ID = 2
 MODBUS_REGISTER_SYSTEM_ID_COMPONENTS = 610
@@ -126,7 +130,7 @@ class DanthermModbus:
         self._attr_available = True
         return True
 
-    async def connect_and_verify(self) -> int | bool:
+    async def connect_and_verify(self) -> bool:
         """Connect to Modbus and verify connection with retries."""
 
         _LOGGER.debug("Attempting Modbus connection for %s", self._host)
@@ -138,13 +142,11 @@ class DanthermModbus:
 
         _LOGGER.debug("Modbus connection established, verifying connection")
         for _ in range(5):
-            result = await self._read_holding_uint32(
-                MODBUS_REGISTER_SYSTEM_ID_COMPONENTS
-            )
+            result = await self._read_holding_uint32(MODBUS_REGISTER_SYSTEM_ID)
             if result is not None:
                 _LOGGER.debug("Modbus client is connected!")
                 self._attr_available = True
-                return result
+                return True
             await asyncio.sleep(1)
 
         _LOGGER.error("Modbus client failed to respond for %s", self._host)
