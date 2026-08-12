@@ -2,6 +2,8 @@
 
 Home Assistant integration for Pluggit ventilation units
 
+[![Installations](https://img.shields.io/endpoint?url=https://ha-analytics.vaskivskyi.com/badges/pluggit/total.json&style=for-the-badge&color=blue)](https://github.com/Tvalley71/pluggit)
+
 > [!NOTE]
 > This integration is based on the [Dantherm integration](https://github.com/Tvalley71/dantherm) 👈, as Pluggit and Dantherm ventilation units appear to share the same controller hardware. To avoid maintaining the code in two separate places, most of the code in this repository is copied from the Dantherm integration with each release.
 
