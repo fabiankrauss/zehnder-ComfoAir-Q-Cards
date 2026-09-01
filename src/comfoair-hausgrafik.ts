@@ -118,12 +118,6 @@ class ComfoAirHausgrafik extends LitElement {
     return Number.isFinite(value) ? value : undefined;
   }
 
-  private airTheme(key: EntityKey): "warm" | "cold" {
-    const temperature = this.numericState(key);
-    const inside = this.numericState("inside_temp");
-    return temperature !== undefined && inside !== undefined && temperature > inside ? "warm" : "cold";
-  }
-
   private heatRecoveryEfficiency(): number | undefined {
     const supply = this.numericState("supply_temp");
     const outside = this.numericState("outside_temp");
@@ -161,16 +155,11 @@ class ComfoAirHausgrafik extends LitElement {
     const fault = this.state("fault")?.state === "on";
     const level = this.fanLevel();
     const efficiency = this.heatRecoveryEfficiency();
-    const air = (key: EntityKey) => this.airTheme(key);
 
     return html`
-      <ha-card style=${`--flow-duration: ${Math.max(0.65, 2.3 - level * 0.45)}s`}>
+      <ha-card>
         <div class="graphic">
           <svg viewBox="0 0 1000 650" role="img" aria-label="ComfoAir Lüftungsübersicht">
-            <defs>
-              <linearGradient id="air-warm" x1="0" x2="1"><stop stop-color="#e74c3c"/><stop offset="1" stop-color="#f39c12"/></linearGradient>
-              <linearGradient id="air-cold" x1="0" x2="1"><stop stop-color="#3498db"/><stop offset="1" stop-color="#2ecc71"/></linearGradient>
-            </defs>
             <rect width="1000" height="650" rx="30" fill="#18222d" />
             <path d="M260 285 500 95 740 285V560H260Z" fill="#243442" stroke="#b8c7d1" stroke-width="9" />
 
@@ -202,22 +191,26 @@ class ComfoAirHausgrafik extends LitElement {
               <text class="fault" x="500" y="147">⚠ Lüftungsstörung</text></g>
             ` : nothing}
 
-            <path d="M210 275H390V330H210" class="channel flow-forward" color=${air("outside_temp") === "warm" ? "#e74c3c" : "#3498db"} stroke=${`url(#air-${air("outside_temp")})`} />
-            <path d="M610 275H790V330H610" class="channel flow-reverse" color=${air("supply_temp") === "warm" ? "#e74c3c" : "#3498db"} stroke=${`url(#air-${air("supply_temp")})`} />
-            <path d="M210 430H390V485H210" class="channel flow-reverse" color=${air("inside_temp") === "warm" ? "#e74c3c" : "#3498db"} stroke=${`url(#air-${air("inside_temp")})`} />
-            <path d="M610 430H790V485H610" class="channel flow-forward" color=${air("exhaust_temp") === "warm" ? "#e74c3c" : "#3498db"} stroke=${`url(#air-${air("exhaust_temp")})`} />
+            <path d="M210 275H390V330H210" class="channel" stroke="#3498db" />
+            <path d="M610 275H790V330H610" class="channel" stroke="#e74c3c" />
+            <path d="M210 430H390V485H210" class="channel" stroke="#e74c3c" />
+            <path d="M610 430H790V485H610" class="channel" stroke="#3498db" />
             <g class="arrows">
-              <path d="m335 285 35 18-35 18Z" /><path d="m665 285-35 18 35 18Z" />
-              <path d="m300 430-35 28 35 27Z" /><path d="m700 430 35 28-35 27Z" />
+              <path d="m340 291 24 12-24 12Z" fill="#3498db" /><path d="m660 291-24 12 24 12Z" fill="#e74c3c" />
+              <path d="m294 439-24 19 24 19Z" fill="#e74c3c" /><path d="m706 439 24 19-24 19Z" fill="#3498db" />
             </g>
 
-            ${this.airReading("Außenluft", "outside_temp", 218, 226, "start")}
-            ${this.airReading("Zuluft", "supply_temp", 782, 226, "end")}
-            ${this.airReading("Abluft", "inside_temp", 218, 385, "start")}
-            ${this.airReading("Fortluft", "exhaust_temp", 782, 385, "end")}
+            <text class="air-label blue start" x="218" y="226">Außenluft</text>
+            <text class="temperature blue start" x="218" y="252">${this.temperature("outside_temp")}</text>
+            <text class="air-label red end" x="782" y="226">Zuluft</text>
+            <text class="temperature red end" x="782" y="252">${this.temperature("supply_temp")}</text>
+            <text class="air-label red start" x="218" y="385">Abluft</text>
+            <text class="temperature red start" x="218" y="411">${this.temperature("inside_temp")}</text>
+            <text class="air-label blue end" x="782" y="385">Fortluft</text>
+            <text class="temperature blue end" x="782" y="411">${this.temperature("exhaust_temp")}</text>
 
             <rect x="405" y="270" width="190" height="220" rx="25" fill="#111a22" stroke="#d8e2e8" stroke-width="7" />
-            <path d="m445 315 110 130M555 315 445 445" stroke="#f4f7f9" stroke-width="25" stroke-linecap="round" />
+            <path d="m450 320 100 120M550 320 450 440" stroke="#f4f7f9" stroke-width="21" stroke-linecap="round" />
             <circle cx="500" cy="380" r="22" fill="#95a5a6" />
             <text class="brand" x="500" y="530">COMFOAIR Q</text>
 
@@ -239,15 +232,6 @@ class ComfoAirHausgrafik extends LitElement {
     `;
   }
 
-  private airReading(label: string, key: EntityKey, x: number, y: number, anchor: "start" | "end") {
-    const theme = this.airTheme(key);
-    const color = theme === "warm" ? "#e74c3c" : "#3498db";
-    return html`<g class="air-reading" fill=${`url(#air-${theme})`} style=${`text-anchor:${anchor}`}>
-      <text class="air-label" x=${x} y=${y} color=${color}>${label}</text>
-      <text class="temperature" x=${x} y=${y + 26} color=${color} fill=${`url(#air-${theme})`}>${this.temperature(key)}</text>
-    </g>`;
-  }
-
   static styles = css`
     :host { display: block; }
     ha-card { overflow: hidden; background: transparent; }
@@ -260,14 +244,13 @@ class ComfoAirHausgrafik extends LitElement {
     .level-dots circle { fill: rgba(255,255,255,.18); stroke: rgba(255,255,255,.32); stroke-width: 1; }
     .level-dots circle.active { fill: #2ecc71; stroke: #75e6a5; }
     .badge, .fault { font-size: 23px; font-weight: 700; text-anchor: middle; }
-    .channel { fill: none; stroke-width: 22; stroke-linecap: round; stroke-dasharray: 28 14; animation: flow-forward var(--flow-duration) linear infinite; }
-    .channel.flow-reverse { animation-name: flow-reverse; }
-    @keyframes flow-forward { to { stroke-dashoffset: -84; } }
-    @keyframes flow-reverse { to { stroke-dashoffset: 84; } }
-    .arrows { fill: #f4f7f9; }
-    .air-label { fill: #aebbc4; font-size: 14px; font-weight: 600; letter-spacing: .04em; }
+    .channel { fill: none; stroke-width: 13; stroke-linecap: round; }
+    .air-label { font-size: 14px; font-weight: 600; letter-spacing: .04em; }
     .temperature { font-size: 20px; font-weight: 800; }
-    .air-reading .temperature { fill: inherit; }
+    .blue { fill: #3498db; }
+    .red { fill: #e74c3c; }
+    .start { text-anchor: start; }
+    .end { text-anchor: end; }
     .brand { fill: #dce6eb; font-size: 25px; text-anchor: middle; }
     .footer { font-size: 21px; text-anchor: middle; }
     .clickable { cursor: pointer; outline: none; }
@@ -282,7 +265,7 @@ class ComfoAirHausgrafik extends LitElement {
     .fault-banner { animation: fault-pulse 1.4s ease-in-out infinite; }
     @keyframes fault-pulse { 50% { opacity: .55; } }
     @media (prefers-reduced-motion: reduce) {
-      .channel, .fault-banner { animation: none; }
+      .fault-banner { animation: none; }
       .interactive { transition: none; }
     }
   `;
