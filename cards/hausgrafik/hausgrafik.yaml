@@ -1,0 +1,94 @@
+# Phase B: picture-elements mit Inline-SVG, um die Zeichnung responsiv zu halten.
+# Dynamische Texte liefert custom:config-template-card (via HACS erforderlich).
+# Entity-IDs nur hier ändern; der Anchor kann auch in Wrapper-Konfigurationen wiederverwendet werden.
+type: custom:config-template-card
+variables: &comfoair_entities
+  HUMIDITY: "'sensor.comfoair_q_inside_humidity'"
+  CO2: "'sensor.wohnzimmer_co2'"
+  FAN: "'fan.comfoair_q'"
+  VENT_MODE: "'select.comfoair_q_ventilation_mode'"
+  OUTSIDE_TEMP: "'sensor.comfoair_q_outside_temperature'"
+  SUPPLY_TEMP: "'sensor.comfoair_q_supply_temperature'"
+  INSIDE_TEMP: "'sensor.comfoair_q_inside_temperature'"
+  EXHAUST_TEMP: "'sensor.comfoair_q_exhaust_temperature'"
+  BYPASS_MODE: "'select.comfoair_q_bypass_mode'"
+  FILTER_DAYS: "'sensor.comfoair_q_days_to_replace_filter'"
+  BOOST_MODE: "'select.comfoair_q_boost_mode'"
+  FAULT: "'binary_sensor.luftung_storung'"
+entities:
+  - "${HUMIDITY}"
+  - "${CO2}"
+  - "${FAN}"
+  - "${VENT_MODE}"
+  - "${OUTSIDE_TEMP}"
+  - "${SUPPLY_TEMP}"
+  - "${INSIDE_TEMP}"
+  - "${EXHAUST_TEMP}"
+  - "${BYPASS_MODE}"
+  - "${FILTER_DAYS}"
+  - "${BOOST_MODE}"
+  - "${FAULT}"
+card:
+  type: picture-elements
+  image: >-
+    data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjY1MCIgdmlld0JveD0iMCAwIDEwMDAgNjUwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2NTAiIHJ4PSIzMCIgZmlsbD0iIzE4MjIyZCIvPjxwYXRoIGQ9Ik0yNjAgMjg1TDUwMCA5NSA3NDAgMjg1VjU2MEgyNjBaIiBmaWxsPSIjMjQzNDQyIiBzdHJva2U9IiNiOGM3ZDEiIHN0cm9rZS13aWR0aD0iOSIvPjxwYXRoIGQ9Ik0yMTAgMjc1SDM5MFYzMzBIMjEwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzNDk4ZGIiIHN0cm9rZS13aWR0aD0iMjIiLz48cGF0aCBkPSJNNjEwIDI3NUg3OTBWMzMwSDYxMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZTc0YzNjIiBzdHJva2Utd2lkdGg9IjIyIi8+PHBhdGggZD0iTTIxMCA0MzBIMzkwVjQ4NUgyMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2U3NGMzYyIgc3Ryb2tlLXdpZHRoPSIyMiIvPjxwYXRoIGQ9Ik02MTAgNDMwSDc5MFY0ODVINjEwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzNDk4ZGIiIHN0cm9rZS13aWR0aD0iMjIiLz48ZyBmaWxsPSIjZjRmN2Y5Ij48cGF0aCBkPSJNMzM1IDI4NWwzNSAxOC0zNSAxOHoiLz48cGF0aCBkPSJNNjY1IDI4NWwtMzUgMTggMzUgMTh6Ii8+PHBhdGggZD0iTTMwMCA0MzBsLTM1IDI4IDM1IDI3eiIvPjxwYXRoIGQ9Ik03MDAgNDMwbDM1IDI4LTM1IDI3eiIvPjwvZz48cmVjdCB4PSI0MDUiIHk9IjI3MCIgd2lkdGg9IjE5MCIgaGVpZ2h0PSIyMjAiIHJ4PSIyNSIgZmlsbD0iIzExMWEyMiIgc3Ryb2tlPSIjZDhlMmU4IiBzdHJva2Utd2lkdGg9IjciLz48cGF0aCBkPSJNNDQ1IDMxNUw1NTUgNDQ1TTU1NSAzMTVMNDQ1IDQ0NSIgc3Ryb2tlPSIjZjRmN2Y5IiBzdHJva2Utd2lkdGg9IjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSI1MDAiIGN5PSIzODAiIHI9IjIyIiBmaWxsPSIjOTVhNWE2Ii8+PHRleHQgeD0iNTAwIiB5PSI1MzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNkY2U2ZWIiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjI1Ij5DT01GT0FJUiBRPC90ZXh0Pjwvc3ZnPgo=
+  elements:
+    - type: state-label
+      entity: "${HUMIDITY}"
+      prefix: "Feuchte "
+      style: {left: 16%, top: 8%, color: white, font-size: 16px, font-weight: bold}
+    - type: state-label
+      entity: "${CO2}"
+      prefix: "CO₂ "
+      style: {left: 50%, top: 8%, color: white, font-size: 16px, font-weight: bold}
+    - type: service-button
+      title: "${(() => { const p = Number(states[FAN]?.attributes?.percentage); return `Level ${p >= 83 ? 3 : p >= 50 ? 2 : p > 0 ? 1 : 0}`; })()}"
+      style: {left: 84%, top: 8%, color: white}
+      tap_action: {action: more-info, entity: "${FAN}"}
+    - type: service-button
+      title: "${states[VENT_MODE]?.state === 'auto' ? 'Automatic' : states[VENT_MODE]?.state === 'manual' ? 'Manual' : 'Unbekannt'}"
+      style: {left: 10%, top: 22%, color: white, background: "rgba(52, 73, 94, .9)", border-radius: 18px}
+      tap_action: {action: more-info, entity: "${VENT_MODE}"}
+    - type: state-label
+      entity: "${OUTSIDE_TEMP}"
+      prefix: "Außenluft  "
+      style: {left: 20%, top: 43%, color: "#3498db", font-size: 17px, font-weight: bold}
+    - type: state-label
+      entity: "${SUPPLY_TEMP}"
+      prefix: "Zuluft  "
+      style: {left: 80%, top: 43%, color: "#e74c3c", font-size: 17px, font-weight: bold}
+    - type: icon
+      icon: mdi:heat-exchanger
+      style: {left: 50%, top: 59%, color: white, transform: "translate(-50%, -50%) scale(1.8)"}
+    - type: state-label
+      entity: "${INSIDE_TEMP}"
+      prefix: "Abluft  "
+      style: {left: 20%, top: 70%, color: "#e74c3c", font-size: 17px, font-weight: bold}
+    - type: state-label
+      entity: "${EXHAUST_TEMP}"
+      prefix: "Fortluft  "
+      style: {left: 80%, top: 70%, color: "#3498db", font-size: 17px, font-weight: bold}
+    - type: state-label
+      entity: "${BYPASS_MODE}"
+      prefix: "Bypass: "
+      style: {left: 18%, top: 91%, color: white, font-size: 14px}
+      tap_action: {action: more-info}
+    - type: state-label
+      entity: "${FILTER_DAYS}"
+      prefix: "Filter: "
+      suffix: " Tage"
+      style: {left: 50%, top: 91%, color: white, font-size: 14px}
+    - type: service-button
+      title: "${`Boost: ${states[BOOST_MODE]?.state ?? '—'}`}"
+      style: {left: 82%, top: 91%, color: white, background: "rgba(231, 76, 60, .85)", border-radius: 18px}
+      tap_action: {action: more-info, entity: "${BOOST_MODE}"}
+    - type: conditional
+      conditions:
+        - entity: "${FAULT}"
+          state: "on"
+      elements:
+        - type: state-label
+          entity: "${FAULT}"
+          prefix: "⚠ Lüftungsstörung: "
+          style: {left: 50%, top: 16%, color: white, background: "#c0392b", padding: 8px 16px, border-radius: 6px, font-weight: bold}
+

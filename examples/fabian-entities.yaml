@@ -1,0 +1,14 @@
+# Fabians reale ComfoAir-Q-Entities (Stand: 01.09.); Referenzliste, keine Card.
+entities:
+  - sensor.comfoair_q_inside_humidity       # Raumfeuchte (%)
+  - sensor.wohnzimmer_co2                   # CO₂ im Wohnzimmer (ppm)
+  - fan.comfoair_q                          # Lüfter: percentage und preset_mode
+  - select.comfoair_q_ventilation_mode      # auto / manual
+  - sensor.comfoair_q_outside_temperature   # Außenluft (°C)
+  - sensor.comfoair_q_supply_temperature    # Zuluft (°C)
+  - sensor.comfoair_q_inside_temperature    # Abluft / Raumluft (°C)
+  - sensor.comfoair_q_exhaust_temperature   # Fortluft (°C)
+  - select.comfoair_q_bypass_mode           # auto / on / off
+  - sensor.comfoair_q_days_to_replace_filter # Restlaufzeit (Tage)
+  - select.comfoair_q_boost_mode            # 10–60 Minutes
+  - binary_sensor.luftung_storung            # Optionales Störungs-Banner

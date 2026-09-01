@@ -1,0 +1,39 @@
+# Keine Custom Cards erforderlich: nur HA-Core (picture-elements, entities, vertical-stack).
+# Einschränkung: HA-Core kann fan.percentage nicht in "Level 1-3" umrechnen; es wird Prozent gezeigt.
+# Entity-IDs sind als YAML-Anker oben gesammelt; nur diese Werte anpassen.
+type: vertical-stack
+x-entity-humidity: &humidity sensor.comfoair_q_inside_humidity
+x-entity-co2: &co2 sensor.wohnzimmer_co2
+x-entity-fan: &fan fan.comfoair_q
+x-entity-vent-mode: &vent_mode select.comfoair_q_ventilation_mode
+x-entity-outside-temp: &outside_temp sensor.comfoair_q_outside_temperature
+x-entity-supply-temp: &supply_temp sensor.comfoair_q_supply_temperature
+x-entity-inside-temp: &inside_temp sensor.comfoair_q_inside_temperature
+x-entity-exhaust-temp: &exhaust_temp sensor.comfoair_q_exhaust_temperature
+x-entity-bypass: &bypass select.comfoair_q_bypass_mode
+x-entity-filter-days: &filter_days sensor.comfoair_q_days_to_replace_filter
+x-entity-boost: &boost select.comfoair_q_boost_mode
+x-entity-fault: &fault binary_sensor.luftung_storung
+cards:
+  - type: picture-elements
+    image: >-
+      data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjY1MCIgdmlld0JveD0iMCAwIDEwMDAgNjUwIj48cmVjdCB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI2NTAiIHJ4PSIzMCIgZmlsbD0iIzE4MjIyZCIvPjxwYXRoIGQ9Ik0yNjAgMjg1TDUwMCA5NSA3NDAgMjg1VjU2MEgyNjBaIiBmaWxsPSIjMjQzNDQyIiBzdHJva2U9IiNiOGM3ZDEiIHN0cm9rZS13aWR0aD0iOSIvPjxwYXRoIGQ9Ik0yMTAgMjc1SDM5MFYzMzBIMjEwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzNDk4ZGIiIHN0cm9rZS13aWR0aD0iMjIiLz48cGF0aCBkPSJNNjEwIDI3NUg3OTBWMzMwSDYxMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZTc0YzNjIiBzdHJva2Utd2lkdGg9IjIyIi8+PHBhdGggZD0iTTIxMCA0MzBIMzkwVjQ4NUgyMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2U3NGMzYyIgc3Ryb2tlLXdpZHRoPSIyMiIvPjxwYXRoIGQ9Ik02MTAgNDMwSDc5MFY0ODVINjEwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzNDk4ZGIiIHN0cm9rZS13aWR0aD0iMjIiLz48ZyBmaWxsPSIjZjRmN2Y5Ij48cGF0aCBkPSJNMzM1IDI4NWwzNSAxOC0zNSAxOHoiLz48cGF0aCBkPSJNNjY1IDI4NWwtMzUgMTggMzUgMTh6Ii8+PHBhdGggZD0iTTMwMCA0MzBsLTM1IDI4IDM1IDI3eiIvPjxwYXRoIGQ9Ik03MDAgNDMwbDM1IDI4LTM1IDI3eiIvPjwvZz48cmVjdCB4PSI0MDUiIHk9IjI3MCIgd2lkdGg9IjE5MCIgaGVpZ2h0PSIyMjAiIHJ4PSIyNSIgZmlsbD0iIzExMWEyMiIgc3Ryb2tlPSIjZDhlMmU4IiBzdHJva2Utd2lkdGg9IjciLz48cGF0aCBkPSJNNDQ1IDMxNUw1NTUgNDQ1TTU1NSAzMTVMNDQ1IDQ0NSIgc3Ryb2tlPSIjZjRmN2Y5IiBzdHJva2Utd2lkdGg9IjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48Y2lyY2xlIGN4PSI1MDAiIGN5PSIzODAiIHI9IjIyIiBmaWxsPSIjOTVhNWE2Ii8+PHRleHQgeD0iNTAwIiB5PSI1MzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNkY2U2ZWIiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjI1Ij5DT01GT0FJUiBRPC90ZXh0Pjwvc3ZnPgo=
+    elements:
+      - {type: state-label, entity: *humidity, prefix: "Feuchte ", style: {left: 16%, top: 8%, color: white}}
+      - {type: state-label, entity: *co2, prefix: "CO₂ ", style: {left: 50%, top: 8%, color: white}}
+      - {type: state-label, entity: *fan, attribute: percentage, suffix: "%", prefix: "Lüfter ", style: {left: 84%, top: 8%, color: white}}
+      - {type: state-label, entity: *vent_mode, style: {left: 10%, top: 22%, color: white}, tap_action: {action: more-info}}
+      - {type: state-label, entity: *outside_temp, prefix: "Außen ", style: {left: 20%, top: 43%, color: "#3498db"}}
+      - {type: state-label, entity: *supply_temp, prefix: "Zuluft ", style: {left: 80%, top: 43%, color: "#e74c3c"}}
+      - {type: icon, icon: mdi:heat-exchanger, style: {left: 50%, top: 59%, color: white}}
+      - {type: state-label, entity: *inside_temp, prefix: "Abluft ", style: {left: 20%, top: 70%, color: "#e74c3c"}}
+      - {type: state-label, entity: *exhaust_temp, prefix: "Fortluft ", style: {left: 80%, top: 70%, color: "#3498db"}}
+  - type: entities
+    title: ComfoAir Q
+    show_header_toggle: false
+    entities:
+      - {entity: *bypass, name: Bypass}
+      - {entity: *filter_days, name: Filter-Restlaufzeit}
+      - {entity: *boost, name: Boost, tap_action: {action: more-info}}
+      - {entity: *fault, name: Lüftungsstörung}
+
