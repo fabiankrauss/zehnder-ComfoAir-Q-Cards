@@ -78,3 +78,32 @@ Nachbau der Hausgrafik (Referenz: Screenshot — Haus-Schema, 4 Luftkanäle, Kop
 - Störungs-Banner bei `binary_sensor.luftung_storung = on`
 - Energie-Badge (aktuelle Leistung 23 W)
 - Wöchentlicher Filter-Progress-Ring
+---
+
+## Phase E — Native JS-Custom-Card (Runden 4-6)
+
+**Ziel:** `custom:comfoair-hausgrafik` als vollwertige Lovelace-Card, installierbar via HACS (Kategorie `plugin`).
+
+- Runde 4: `src/comfoair-hausgrafik.ts` (Lit-Element), `src/editor.ts` (GUI-Editor mit Entity-Picker), SVG-Grafik inline gerendert (kein Base64 mehr), Level-Berechnung in JS → standalone ohne config-template-card
+- Runde 5: Build (esbuild) → `comfoair-hausgrafik.js` + `comfoair-hausgrafik-editor.js` im Root, `hacs.json` (name, render_readme, homeassistant), Release-Workflow (GitHub Actions)
+- Runde 6: README-Update (HACS-Install-Sektion), Verifikation, Push
+
+Card-Konfig:
+```yaml
+type: custom:comfoair-hausgrafik
+entities:
+  humidity: sensor.comfoair_q_inside_humidity
+  co2: sensor.wohnzimmer_co2
+  fan: fan.comfoair_q
+  vent_mode: select.comfoair_q_ventilation_mode
+  outside_temp: sensor.comfoair_q_outside_temperature
+  supply_temp: sensor.comfoair_q_supply_temperature
+  inside_temp: sensor.comfoair_q_inside_temperature
+  exhaust_temp: sensor.comfoair_q_exhaust_temperature
+  bypass: select.comfoair_q_bypass_mode
+  filter_days: sensor.comfoair_q_days_to_replace_filter
+  boost: select.comfoair_q_boost_mode
+  fault: binary_sensor.luftung_storung
+show_header: true   # optional
+show_footer: true   # optional
+```
