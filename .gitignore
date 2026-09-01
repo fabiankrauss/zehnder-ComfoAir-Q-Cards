@@ -3,3 +3,5 @@ custom_components/pluggit/pluggit.zip
 __pycache__/
 *.pyc
 .DS_Store
+node_modules/
+dist/
